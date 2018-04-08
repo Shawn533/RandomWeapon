@@ -8,7 +8,6 @@ package randomweapon;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -49,10 +48,11 @@ public class RandomWeapon {
     
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         
-        // Gets input
-        Scanner scan = new Scanner(System.in);
-        int rarity = scan.nextInt();
-        scan.close();
+        int rarity;
+        try ( // Gets input
+                Scanner scan = new Scanner(System.in)) {
+            rarity = scan.nextInt();
+        }
         
         // update weapon rarity
         weapon[0] = rarity;
@@ -86,23 +86,21 @@ public class RandomWeapon {
         int range = rn.nextInt(maxRange - minRange + 1) + minRange;
         weapon[7] = (int) (range * ((rarity *.1)+1));
         
+        // Checks if values are over 100
         for (int x=5; x<8; x++){
             if (weapon[x] > 100) {
                 weapon[x] =100;
             }
         }
         
-        for ( int i =0; i < 8; i++) {
-            System.out.print(weapon[i]+" ");
-        }
-        System.out.print("\n" +weapon+"\n");
-        
-        // Create file/overwrite
+        // Create file if needed/points to file
         FileWriter file = new FileWriter("weapon_data.txt", true);
         
+        // Add array to file
         file.append(Arrays.toString(weapon));
         file.append("\n");
         
+        // Make sure all operations are finished then close
         file.flush();
         file.close();
     }
