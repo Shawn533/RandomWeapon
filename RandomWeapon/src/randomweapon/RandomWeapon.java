@@ -5,6 +5,12 @@
  */
 package randomweapon;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -34,18 +40,17 @@ public class RandomWeapon {
     public static int maxScope = 5;
     
     // min/max Damage, Accuracy, Range
-    public static int minDamage = 10;
-    public static int maxDamage = 22;
+    public static int minDamage = 15;
+    public static int maxDamage = 25;
     public static int minAccuracy = 70;
-    public static int maxAccuracy = 90;
+    public static int maxAccuracy = 80;
     public static int minRange = 15;
-    public static int maxRange = 30;
+    public static int maxRange = 27;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         
         // Gets input
         Scanner scan = new Scanner(System.in);
-        System.out.print("Enter number for rarity DELETE print later\n");
         int rarity = scan.nextInt();
         scan.close();
         
@@ -67,11 +72,11 @@ public class RandomWeapon {
         
         // Create random stock of weapon
         int scope = rn.nextInt(maxScope - min + 1 ) + min;
-        weapon[4] = (int) (scope * ((rarity *.1)+1));
+        weapon[4] = scope;
         
         // Generate damage based off barrel and rarity
         int damage = rn.nextInt(maxDamage - minDamage + 1) + minDamage;
-        weapon[5] = (int) (damage* ((rarity *.1)+1));
+        weapon[5] = (int) (damage* ((rarity *.2)+1));
         
         // Generate accuracy based off stock and rarity
         int accuracy = rn.nextInt(maxAccuracy - minAccuracy + 1) + minAccuracy;
@@ -81,9 +86,25 @@ public class RandomWeapon {
         int range = rn.nextInt(maxRange - minRange + 1) + minRange;
         weapon[7] = (int) (range * ((rarity *.1)+1));
         
+        for (int x=5; x<8; x++){
+            if (weapon[x] > 100) {
+                weapon[x] =100;
+            }
+        }
+        
         for ( int i =0; i < 8; i++) {
             System.out.print(weapon[i]+" ");
         }
+        System.out.print("\n" +weapon+"\n");
+        
+        // Create file/overwrite
+        FileWriter file = new FileWriter("weapon_data.txt", true);
+        
+        file.append(Arrays.toString(weapon));
+        file.append("\n");
+        
+        file.flush();
+        file.close();
     }
     
 }
